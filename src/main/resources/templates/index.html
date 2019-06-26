@@ -16,6 +16,8 @@
     <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<!--/*@thymesVar id="recipes" type="java.util.List"*/-->
+<!--/*@thymesVar id="recipe" type="com.fafik.recipeapplication.domain.Recipe"*/-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -48,7 +50,7 @@
                                 <!--/*@thymesVar id="recipe" type="com.fafik.recipeapplication.domain.Recipe"*/-->
                                 <td th:text="${recipe.id}">334</td>
                                 <td th:text="${recipe.description}">Tasty Goodnees 3</td>
-                                <td><a href="#" th:href="@{'/recipe/show'+${recipe.id}}"
+                                <td><a href="#" th:href="@{'/recipe/'+${recipe.id}+'/show'}"
                                        th:text="${recipe.id}">View</a>
                                 </td>
                             </tr>
