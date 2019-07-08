@@ -1,8 +1,10 @@
 package com.fafik.recipeapplication.controllers;
 
 import com.fafik.recipeapplication.command.RecipeCommand;
+import com.fafik.recipeapplication.domain.Recipe;
 import com.fafik.recipeapplication.services.ImageService;
 import com.fafik.recipeapplication.services.RecipeService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,6 +13,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.swing.plaf.multi.MultiPanelUI;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -50,12 +56,13 @@ public class ImageControllerTest {
     }
     @Test
     public void handleImagePost() throws Exception{
-        MockMultipartFile multipartFile= new MockMultipartFile("file","testing.txt","text/plain","Fafik here !!".getBytes());
+        MockMultipartFile multipartFile= new MockMultipartFile("imagefile","testing.txt","text/plain","Fafik here !!".getBytes());
 
         mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location","/recipe/1/show"));
         verify(imageService,times(1)).saveImageFile(anyLong(),any());
     }
+
 
 }
