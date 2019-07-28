@@ -1,11 +1,14 @@
 package com.fafik.recipeapplication.controllers;
 
 import com.fafik.recipeapplication.command.RecipeCommand;
+import com.fafik.recipeapplication.exceptions.NotFoundException;
 import com.fafik.recipeapplication.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller
@@ -48,5 +51,15 @@ public class RecipeController {
 
         recipeService.deleteById(Long.valueOf(id));
         return"redirect:/";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(){
+        log.error("Handling not found exception");
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("404error");
+        return modelAndView;
     }
 }
