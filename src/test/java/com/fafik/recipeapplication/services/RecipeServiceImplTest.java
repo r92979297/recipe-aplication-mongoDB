@@ -3,6 +3,7 @@ package com.fafik.recipeapplication.services;
 import com.fafik.recipeapplication.converters.RecipeCommandToRecipe;
 import com.fafik.recipeapplication.converters.RecipeToRecipeCommand;
 import com.fafik.recipeapplication.domain.Recipe;
+import com.fafik.recipeapplication.exceptions.NotFoundException;
 import com.fafik.recipeapplication.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,14 @@ public class RecipeServiceImplTest {
 
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+    @Test(expected = NotFoundException.class)
+    public void getRecipeBuIdTestNotFound() throws Exception{
+        Optional<Recipe> recipeOptional = Optional.empty();
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Recipe recipeReturned = recipeService.findById(1L);
     }
 
     @Test

@@ -30,27 +30,28 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
             return null;
         }
 
-        final RecipeCommand recipe = new RecipeCommand();
-        recipe.setId(source.getId());
-        recipe.setCookTime(source.getCookTime());
-        recipe.setPrepTime(source.getPrepTime());
-        recipe.setDescription(source.getDescription());
-        recipe.setDifficulty(source.getDifficulty());
-        recipe.setDirections(source.getDirections());
-        recipe.setServings(source.getServings());
-        recipe.setSource(source.getSource());
-        recipe.setUrl(source.getUrl());
-        recipe.setNotes(notesConverter.convert(source.getNotes()));
+        final RecipeCommand command = new RecipeCommand();
+        command.setId(source.getId());
+        command.setCookTime(source.getCookTime());
+        command.setPrepTime(source.getPrepTime());
+        command.setDescription(source.getDescription());
+        command.setDifficulty(source.getDifficulty());
+        command.setDirections(source.getDirections());
+        command.setServings(source.getServings());
+        command.setSource(source.getSource());
+        command.setUrl(source.getUrl());
+        command.setNotes(notesConverter.convert(source.getNotes()));
+        command.setImage(source.getImage());
 
         if(source.getCategories() != null && source.getCategories().size()>0){
             source.getCategories()
-                    .forEach(category -> recipe.getCategories().add(categoryConverter.convert(category)));
+                    .forEach(category -> command.getCategories().add(categoryConverter.convert(category)));
         }
 
         if (source.getIngredients() != null && source.getIngredients().size()>0){
             source.getIngredients()
-                    .forEach(ingredient-> recipe.getIngredients().add(ingredientConverter.convert(ingredient)));
+                    .forEach(ingredient-> command.getIngredients().add(ingredientConverter.convert(ingredient)));
         }
-        return  recipe;
+        return  command;
     }
 }

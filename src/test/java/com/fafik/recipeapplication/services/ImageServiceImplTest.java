@@ -33,7 +33,7 @@ public class ImageServiceImplTest {
     public void saveImageFile() throws Exception{
 
         Long id = 1L;
-        MultipartFile multipartFile= new MockMultipartFile("file","testing.txt","text/plain","Fafik here !!".getBytes());
+        MultipartFile multipartFile= new MockMultipartFile("recipefile","testing.txt","text/plain","Fafik here !!".getBytes());
 
         Recipe recipe = new Recipe();
         recipe.setId(id);
