@@ -75,7 +75,7 @@ public class IngredientServiceImpl implements IngredientService {
                         .orElseThrow(()-> new RuntimeException("UOM not found")));
             }else{
                 Ingredient ingredient =ingredientCommandToIngredient.convert(command);
-                ingredient.setRecipe(recipe);
+//                ingredient.setRecipe(recipe);
                 recipe.addIngredient(ingredient);
             }
             Recipe savedRecipe = recipeRepository.save(recipe);
@@ -91,6 +91,8 @@ public class IngredientServiceImpl implements IngredientService {
                         .filter(recipeIngredient -> recipeIngredient.getUom().getId().equals(command.getUom().getId()))
                         .findFirst();
             }
+            IngredientCommand ingredientCommandSaved = ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            ingredientCommandSaved.setRecipeId(recipe.getId());
             return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
 
         }
@@ -114,7 +116,7 @@ public class IngredientServiceImpl implements IngredientService {
             if(ingredientOptional.isPresent()){
                 log.debug("found Ingredient");
                 Ingredient ingredientToDelete = ingredientOptional.get();
-                ingredientToDelete.setRecipe(null);
+//                ingredientToDelete.setRecipe(null);
                 recipe.getIngredients().remove(ingredientOptional.get());
                 recipeRepository.save(recipe);
             }
