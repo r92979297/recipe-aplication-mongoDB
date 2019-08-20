@@ -5,6 +5,7 @@ import com.fafik.recipeapplication.converters.RecipeCommandToRecipe;
 import com.fafik.recipeapplication.converters.RecipeToRecipeCommand;
 import com.fafik.recipeapplication.domain.Recipe;
 import com.fafik.recipeapplication.repositories.RecipeRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class RecipeServiceImplIT {
     RecipeToRecipeCommand recipeToRecipeCommand;
 
 
+    @Ignore
     @Transactional
     @Test
     public void testSaveOfDescription() {

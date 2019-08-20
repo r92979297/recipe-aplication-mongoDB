@@ -46,7 +46,8 @@ public class IngredientServiceImplTest {
 
     }
     @Test
-    public void findByRecipeIdAndIdHappyPath() throws Exception{
+    public void findByRecipeIdAndReceipeIdHappyPath() throws Exception {
+        //given
         Recipe recipe = new Recipe();
         recipe.setId("1");
 
@@ -54,7 +55,7 @@ public class IngredientServiceImplTest {
         ingredient1.setId("1");
 
         Ingredient ingredient2 = new Ingredient();
-        ingredient2.setId("2");
+        ingredient2.setId("1");
 
         Ingredient ingredient3 = new Ingredient();
         ingredient3.setId("3");
@@ -62,17 +63,19 @@ public class IngredientServiceImplTest {
         recipe.addIngredient(ingredient1);
         recipe.addIngredient(ingredient2);
         recipe.addIngredient(ingredient3);
-
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
-        IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId("1","#");
+        //then
+        IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId("1", "3");
 
-        assertEquals("3",ingredientCommand.getId());
-        assertEquals("1",ingredientCommand.getRecipeId());
-        verify(recipeRepository,times(1)).findById(anyString());
+        //when
+        assertEquals("3", ingredientCommand.getId());
+        assertEquals("1", ingredientCommand.getRecipeId());
+        verify(recipeRepository, times(1)).findById(anyString());
     }
+
 
     @Test
     public void testSaveRecipeCommand() throws Exception{
@@ -91,7 +94,7 @@ public class IngredientServiceImplTest {
 
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
 
-        assertEquals(Long.valueOf(3L),savedCommand.getId());
+        assertEquals("3",savedCommand.getId());
         verify(recipeRepository,times(1)).findById(anyString());
         verify(recipeRepository,times(1)).save(any(Recipe.class));
     }
