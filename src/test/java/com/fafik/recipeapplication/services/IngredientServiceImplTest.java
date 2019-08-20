@@ -16,8 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class IngredientServiceImplTest {
@@ -105,7 +104,7 @@ public class IngredientServiceImplTest {
         Ingredient ingredient = new Ingredient();
         ingredient.setId("3");
         recipe.addIngredient(ingredient);
-        ingredient.setRecipe(recipe);
+//        ingredient.setRecipe(recipe);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
