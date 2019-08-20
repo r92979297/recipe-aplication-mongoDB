@@ -48,14 +48,14 @@ public class ImageControllerTest {
     @Test
     public void getImageForm() throws Exception{
         RecipeCommand command = new RecipeCommand();
-        command.setId(1L);
+        command.setId("1");
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(command);
+        when(recipeService.findCommandById(anyString())).thenReturn(command);
 
         mockMvc.perform(get("/recipe/1/image"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"));
-        verify(recipeService,times(1)).findCommandById(anyLong());
+        verify(recipeService,times(1)).findCommandById(anyString());
     }
     @Test
     public void handleImagePost() throws Exception{
@@ -64,13 +64,13 @@ public class ImageControllerTest {
         mockMvc.perform(multipart("/recipe/1/image").file(multipartFile))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location","/recipe/1/show"));
-        verify(imageService,times(1)).saveImageFile(anyLong(),any());
+        verify(imageService,times(1)).saveImageFile(anyString(),any());
     }
 
     @Test
     public void renderImageFromDB() throws Exception{
         RecipeCommand command = new RecipeCommand();
-        command.setId(1L);
+        command.setId("1");
 
         String s = "this is fake imaqe text";
         Byte[] bytesBoxed =  new Byte[s.getBytes().length];
@@ -82,7 +82,7 @@ public class ImageControllerTest {
 
         command.setImage(bytesBoxed);
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(command);
+        when(recipeService.findCommandById(anyString())).thenReturn(command);
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
                 .andExpect(status().isOk())
