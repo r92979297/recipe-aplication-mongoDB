@@ -3,21 +3,17 @@ package com.fafik.recipeapplication.controllers;
 import com.fafik.recipeapplication.command.IngredientCommand;
 import com.fafik.recipeapplication.command.RecipeCommand;
 import com.fafik.recipeapplication.command.UnitOfMeasureCommand;
-import com.fafik.recipeapplication.domain.Recipe;
 import com.fafik.recipeapplication.services.IngredientService;
 import com.fafik.recipeapplication.services.RecipeService;
 import com.fafik.recipeapplication.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.pl.REGON;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.StreamSupport;
-
 @Slf4j
 @Controller
-public class IngredientController<model> {
+public class IngredientController {
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final UnitOfMeasureService unitOfMeasureService;
@@ -41,7 +37,7 @@ public class IngredientController<model> {
     @RequestMapping("recipe/{recipeId}/ingredient/{id}/show")
     public String showRecipeIngredient(@PathVariable String recipeId,
                                        @PathVariable String id, Model model){
-        model.addAttribute("ingredient",ingredientService.findByRecipeIdAndIngredientId(recipeId,id));
+        model.addAttribute("ingredient",ingredientService.findByRecipeIdAndIngredientId(recipeId,id).block());
         return "recipe/ingredient/show";
     }
 
@@ -49,14 +45,14 @@ public class IngredientController<model> {
     @RequestMapping("recipe/{recipeId}/ingredient/new")
     public String newRecipe(@PathVariable String recipeId,Model model){
 
-        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId);
+        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
         // todo raise exception if null
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
         model.addAttribute("ingredient",ingredientCommand);
 
         ingredientCommand.setUom(new UnitOfMeasureCommand());
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         return "recipe/ingredient/ingredientform";
     }
 
@@ -64,7 +60,7 @@ public class IngredientController<model> {
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute IngredientCommand command){
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
+        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
         log.debug("saved recipe id: "+savedCommand.getRecipeId());
         log.debug("saved ingedient id: "+savedCommand.getId());
@@ -76,8 +72,8 @@ public class IngredientController<model> {
     @RequestMapping("recipe/{recipeId}/ingredient/{id}/update")
     public String updateRecipeIngredient(@PathVariable String recipeId,
                                          @PathVariable String id, Model model){
-        model.addAttribute("ingredient",ingredientService.findByRecipeIdAndIngredientId(recipeId,id));
-        model.addAttribute("uomList",unitOfMeasureService.listAllUoms());
+        model.addAttribute("ingredient",ingredientService.findByRecipeIdAndIngredientId(recipeId,id).block());
+        model.addAttribute("uomList",unitOfMeasureService.listAllUoms().collectList().block());
 
         return "recipe/ingredient/ingredientform";
     }
@@ -88,7 +84,7 @@ public class IngredientController<model> {
                                            @PathVariable String id){
         log.debug("Deleting ingredient id:" +id);
 
-        ingredientService.deleteById(recipeId,id);
+        ingredientService.deleteById(recipeId,id).block();
         return"redirect:/recipe/"+recipeId+"/ingredients";
     }
 }

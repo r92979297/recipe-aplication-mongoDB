@@ -1,11 +1,11 @@
 package com.fafik.recipeapplication.services;
 
 import com.fafik.recipeapplication.domain.Recipe;
-import com.fafik.recipeapplication.repositories.RecipeRepository;
+import com.fafik.recipeapplication.repositories.reactive.RecipeReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -13,31 +13,41 @@ import java.io.IOException;
 @Service
 public class ImageServiceImpl implements ImageService{
 
-    public final RecipeRepository recipeRepository;
+    public final RecipeReactiveRepository recipeReactiveRepository;
 
-    public ImageServiceImpl(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public ImageServiceImpl(RecipeReactiveRepository recipeReactiveRepository) {
+        this.recipeReactiveRepository = recipeReactiveRepository;
     }
 
 
     @Override
-    @Transactional
-    public void saveImageFile(String id, MultipartFile file) {
-        try{
-            Recipe recipe = recipeRepository.findById(id).get();
-            Byte[] byteObjects= new Byte[file.getBytes().length];
+    public Mono<Void>  saveImageFile(String id, MultipartFile file) {
+       Mono<Recipe> recipeMono=recipeReactiveRepository
+                .findById(id)
+                .map(recipe->{
+                    Byte[] byteObjects = new Byte[0];
+                    try{
+                       byteObjects= new Byte[file.getBytes().length];
 
-            int i =0;
+                        int i =0;
 
-            for(byte b : file.getBytes()){
-                byteObjects[i++]=b;
-            }
+                        for(byte b : file.getBytes()){
+                            byteObjects[i++]=b;
+                        }
 
-            recipe.setImage(byteObjects);
-            recipeRepository.save(recipe);
-        }catch(IOException e){
-            log.error("Error occured:"+e);
-            e.printStackTrace();
-        }
+                        recipe.setImage(byteObjects);
+
+                        return recipe;
+                    }catch(IOException e){
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                });
+       recipeReactiveRepository.save(recipeMono.block()).block();
+
+
+
+
+        return Mono.empty();
     }
 }
